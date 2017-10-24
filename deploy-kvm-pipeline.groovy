@@ -122,7 +122,7 @@ node('oscore-testing') {
                   tpl = "${env.WORKSPACE}/templates/clound-init-single.yaml"
               } else if ("${params.TEMPLATE}" == 'Multi') {
                   //multinode deployment will be here
-                  echo 'Multi'
+                  tpl = "${env.WORKSPACE}/templates/clound-init-multi.yaml"
               }
               createDevOpsEnv(devops_dos_path, tpl, envVars)
           }
