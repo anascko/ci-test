@@ -112,7 +112,7 @@ node('oscore-testing') {
 
           stage ('Creating environmet') {
               // get DevOps templates
-              git.checkoutGitRepository('templates', 'https://github.com/ohryhorov/devops-templates', 'master', '')
+              git.checkoutGitRepository('templates', 'https://github.com/anascko/devops-templates', 'master', '')
 
               if ("${params.STACK_NAME}" == '') {
                   error('ENV_NAME variable have to be defined')
@@ -122,7 +122,7 @@ node('oscore-testing') {
                   tpl = "${env.WORKSPACE}/templates/clound-init-single.yaml"
               } else if ("${params.TEMPLATE}" == 'Multi') {
                   //multinode deployment will be here
-                  tpl = "${env.WORKSPACE}/templates/clound-init-multi.yaml"
+                  tpl = "${env.WORKSPACE}/templates/virtual-mcp11-ovs/underlay.yaml"
               }
               createDevOpsEnv(devops_dos_path, tpl, envVars)
           }
