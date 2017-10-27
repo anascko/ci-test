@@ -81,7 +81,7 @@ def ifEnvIsReady(envip){
     def retries = 50
     if (retries != -1){
         retry(retries){
-            return sh(script: "for i in $envip; do nc -z -w 30 $i 22; done", returnStdout: true, )
+            return sh(script: "for i in ${envip}; do nc -z -w 30 ${i} 22; done", returnStdout: true, )
         }
         common.successMsg("The env with IP ${envip} has been started")
     } else {
@@ -130,6 +130,8 @@ node('oscore-testing') {
               startupDevOpsEnv(devops_dos_path, envname, envVars)
           }
           stage ('Getting environment IP') {
+              print envname
+              print envVars
               envip = getDevOpsIP(devops_dos_path, envname, envVars)
               currentBuild.description = "${envname} ${envip} ${env.NODE_NAME}"
           }
@@ -159,7 +161,7 @@ node('oscore-testing') {
                         envVars.push("ENV_NAME=${STACK_NAME}")
                         destroyDevOpsEnv("${devops_dos_path}", STACK_NAME, envVars)
                       } else {
-                        envVars.push("ENV_NAME=${envname}")
+                        enfEnvIsReadyvVars.push("ENV_NAME=${envname}")
                         destroyDevOpsEnv("${devops_dos_path}", "${envname}", envVars)
                       }
                   }
