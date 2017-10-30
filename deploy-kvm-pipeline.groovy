@@ -73,7 +73,7 @@ def startupDevOpsEnv(path, env, envVars){
   */
 def getDevOpsIP(path, env, envVars){
     withEnv(envVars) {
-        return sh(script: "${path} slave-ip-list --address-pool-name public-pool01 --ip-only ${env} | awk '{print $1}' " returnStdout: true, ).trim()
+        return sh(script: "${path} slave-ip-list --address-pool-name public-pool01 --ip-only ${env} | awk \'{print $1}\'" returnStdout: true, ).trim()
     }
 }
 
