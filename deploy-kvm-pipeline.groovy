@@ -73,7 +73,7 @@ def startupDevOpsEnv(path, env, envVars){
   */
 def getDevOpsIP(path, env, envVars){
     withEnv(envVars) {
-        return sh(script: "${path} slave-ip-list --address-pool-name public-pool01 --ip-only ${env}", returnStdout: true, ).trim()
+        return sh(script: "${path} slave-ip-list --address-pool-name public-pool01 --ip-only ${env} | awk '{print $1}' " returnStdout: true, ).trim()
     }
 }
 
@@ -81,7 +81,7 @@ def ifEnvIsReady(envip){
     def retries = 50
     if (retries != -1){
         retry(retries){
-            return sh(script: "nc -z -w 30 ${envip} 22 | awk '{print $1}'", returnStdout: true, )
+            return sh(script: "nc -z -w 30 ${envip} 22", returnStdout: true, )
         }
         common.successMsg("The env with IP ${envip} has been started")
     } else {
