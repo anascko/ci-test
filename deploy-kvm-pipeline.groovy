@@ -98,7 +98,7 @@ node('oscore-testing') {
     def venv="${env.WORKSPACE}/devops-venv"
     def devops_dos_path = "${venv}/bin/dos.py"
     def devops_work_dir = '/var/fuel-devops-venv'
-    def envname
+    def envname=
 
     try {
         setupDevOpsVenv(venv)
@@ -107,17 +107,17 @@ node('oscore-testing') {
 
         if (CREATE_ENV.toBoolean()) {
           def dt = new Date().getTime()
-          envname = "${params.STACK_NAME}-${dt}"
+          envname = "${params.ENV_NAME}"
           envVars.push("ENV_NAME=${envname}")
 
           stage ('Creating environmet') {
               // get DevOps templates
               git.checkoutGitRepository('templates', 'https://github.com/anascko/devops-templates', 'master', '')
 
-              if ("${params.STACK_NAME}" == '') {
+              if ("${params.ENV_NAME}" == '') {
                   error('ENV_NAME variable have to be defined')
               }
-              echo "${params.STACK_NAME} ${params.TEMPLATE}"
+              echo "${params.ENV_NAME} ${params.TEMPLATE}"
               if ("${params.TEMPLATE}" == 'Single') {
                   tpl = "${env.WORKSPACE}/templates/clound-init-single.yaml"
               } else if ("${params.TEMPLATE}" == 'Multi') {
@@ -130,8 +130,8 @@ node('oscore-testing') {
               startupDevOpsEnv(devops_dos_path, envname, envVars)
           }
           stage ('Getting environment IP') {
-              print envname
-              print envVars
+              echo "${envname}"
+              echo "${envVars}"
               envip = getDevOpsIP(devops_dos_path, envname, envVars)
               currentBuild.description = "${envname} ${envip} ${env.NODE_NAME}"
           }
@@ -158,8 +158,8 @@ node('oscore-testing') {
         } else if (DESTROY_ENV.toBoolean()) {
                   stage ('Bringing down environmnet') {
                       if (STACK_NAME) {
-                        envVars.push("ENV_NAME=${STACK_NAME}")
-                        destroyDevOpsEnv("${devops_dos_path}", STACK_NAME, envVars)
+                        envVars.push("ENV_NAME=${ENV_NAME}")
+                        destroyDevOpsEnv("${devops_dos_path}", ENV_NAME, envVars)
                       } else {
                         enfEnvIsReadyvVars.push("ENV_NAME=${envname}")
                         destroyDevOpsEnv("${devops_dos_path}", "${envname}", envVars)
