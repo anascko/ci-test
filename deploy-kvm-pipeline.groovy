@@ -98,7 +98,7 @@ node('oscore-testing') {
     def venv="${env.WORKSPACE}/devops-venv"
     def devops_dos_path = "${venv}/bin/dos.py"
     def devops_work_dir = '/var/fuel-devops-venv'
-    def envname=
+    def envname
 
     try {
         setupDevOpsVenv(venv)
