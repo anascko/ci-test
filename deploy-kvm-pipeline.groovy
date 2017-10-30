@@ -73,7 +73,7 @@ def startupDevOpsEnv(path, env, envVars){
   */
 def getDevOpsIP(path, env, envVars){
     withEnv(envVars) {
-        return sh(script: "${path} slave-ip-list --address-pool-name public-pool01 --ip-only ${env}", returnStdout: true, ).trim()
+        return sh(script: "${path} slave-ip-list --address-pool-name public-pool01 --ip-only ${env}", returnStdout: true, ).split(' ')
     }
 }
 
@@ -132,12 +132,11 @@ node('oscore-testing') {
           stage ('Getting environment IP') {
               echo "${envname}"
               echo "${envVars}"
-              def envip=[]
               envip = getDevOpsIP(devops_dos_path, envname, envVars)
               currentBuild.description = "${envname} ${envip} ${env.NODE_NAME}"
           }
           stage ('Checking whether the env has finished starting') {
-              ifEnvIsReady(envip.take(0))
+              ifEnvIsReady(envip[0])
 
               if (DEPLOY_OPENSTACK.toBoolean()) {
                    stack_deploy_job = "deploy-${STACK_TYPE}-${TEST_MODEL}"
